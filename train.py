@@ -7,11 +7,19 @@ def train_sample(model, data, total_timesteps, device="cpu"):
     for t in range(total_timesteps):
         t = torch.tensor(t).to(device)
         total_timesteps = torch.tensor(total_timesteps).to(device)
+        noisy_tensor, noise = add_noise(data, t, total_timesteps, device)
+        noisy_tensor = noisy_tensor.unsqueeze(0)
+        noise = noise.unsqueeze(0)
         model.to(device)
-        x_1 = add_noise(data, t, total_timesteps)
-        x_0 = add_noise(data, t + 1, total_timesteps)
-
-        model.training_step(x_0.unsqueeze(0) , x_1.unsqueeze(0) , t)
+        model.training_step(noisy_tensor, noise, t)
     
     return model
 
+
+def denoise_timestep(model, data, timestep, total_timesteps, device="cpu"):
+    t = torch.tensor(timestep).to(device)
+    total_timesteps = torch.tensor(total_timesteps).to(device)
+    
+    noise = model(data, t)
+    denoised = data - noise
+    return torch.clamp(denoised, 0, 1).clone().detach()

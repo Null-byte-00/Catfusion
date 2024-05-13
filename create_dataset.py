@@ -4,7 +4,7 @@ import torch
 
 def create_dataset(data_dir, dataset_name='datasets/cats.pth'):
     transform = transforms.Compose([
-        transforms.Resize((150, 150)),
+        transforms.Resize((64, 64)),
         transforms.ToTensor(),
     ])
 

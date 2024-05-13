@@ -7,4 +7,4 @@ def add_noise(tensor, timestep, total_timesteps, device="cpu"):
 
     noisy_tensor = tensor + noise
 
-    return noisy_tensor
+    return noisy_tensor, noise

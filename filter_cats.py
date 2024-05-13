@@ -5,10 +5,10 @@ import shutil
 pygame.init()
 screen = pygame.display.set_mode((500,500))
 
-if not os.path.exists('cat_images'):
-    os.makedirs('cat_images')
+if not os.path.exists('datasets/cat_images'):
+    os.makedirs('datasets/cat_images')
 
-image_index = 1872
+image_index = 2229
 
 while True:
     for event in pygame.event.get():
@@ -22,8 +22,8 @@ while True:
                 image_index += 1
             if event.key == pygame.K_UP:
                 print('Cat image moved to cat_images')
-                shutil.copyfile('cats/' + str(image_index) + '.jpg', 'cat_images/' + str(image_index) + '.jpg')
-                num_files = len([name for name in os.listdir('cat_images')])
+                shutil.copyfile('cats/' + str(image_index) + '.jpg', 'datasets/cat_images/' + str(image_index) + '.jpg')
+                num_files = len([name for name in os.listdir('datasets/cat_images')])
                 print('Number of cat images in cat_images:', num_files)
 
     try:
