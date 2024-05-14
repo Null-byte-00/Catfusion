@@ -22,4 +22,4 @@ def denoise_timestep(model, data, timestep, total_timesteps, device="cpu"):
     
     noise = model(data, t)
     denoised = data - noise
-    return torch.clamp(denoised, 0, 1).clone().detach()
+    return torch.clamp(denoised, -1, 1).clone().detach()

@@ -7,4 +7,6 @@ def add_noise(tensor, timestep, total_timesteps, device="cpu"):
 
     noisy_tensor = tensor + noise
 
+    noisy_tensor = torch.clamp(noisy_tensor, -1, 1)
+
     return noisy_tensor, noise

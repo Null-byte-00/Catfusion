@@ -137,7 +137,7 @@ class DiffusionModel(nn.Module):
     def __init__(self,device="cpu", *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.unet = UNet(3, 3).to(device)
-        self.optimizer = torch.optim.SGD(self.unet.parameters(), lr=0.00003)
+        self.optimizer = torch.optim.SGD(self.unet.parameters(), lr=0.00001)
         self.criterion = nn.L1Loss()
     
     def forward(self, x, t):
