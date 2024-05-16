@@ -21,6 +21,8 @@ class TimeEmbeddings(nn.Module):
         self.channels = channels
         self.stack = nn.Sequential(
             nn.Linear(channels, channels),
+            #nn.ReLU(),
+            #nn.Linear(channels, channels),
             nn.ReLU(),
         )
     
@@ -134,10 +136,10 @@ class UNet(nn.Module):
 
 
 class DiffusionModel(nn.Module):
-    def __init__(self,device="cpu", *args, **kwargs) -> None:
+    def __init__(self,device="cpu", lr=0.00001, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.unet = UNet(3, 3).to(device)
-        self.optimizer = torch.optim.SGD(self.unet.parameters(), lr=0.00001)
+        self.optimizer = torch.optim.SGD(self.unet.parameters(), lr=lr)
         self.criterion = nn.L1Loss()
     
     def forward(self, x, t):
