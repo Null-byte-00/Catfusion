@@ -37,8 +37,8 @@ def test_model(verbose=True):
         if verbose:
             print(f"Epoch {epoch}: Loss: {loss}")
     
-   # noisy_tensor, noise = add_noise(data, timestep, total_timesteps, device)
-    noisy_tensor = rand_img().to(device)
+    noisy_tensor, noise = add_noise(data, timestep, total_timesteps, device)
+    #noisy_tensor = rand_img().to(device)
     pred_noise = model(noisy_tensor, timestep)
     denoised = noisy_tensor - pred_noise
     denoised = torch.clamp(denoised, -1, 1)

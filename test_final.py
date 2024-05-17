@@ -2,6 +2,7 @@ import torch
 from torchvision import datasets, transforms
 from train import train_sample, denoise_timestep
 from model import DiffusionModel
+from noise_scheduler import add_noise
 import matplotlib.pyplot as plt
 
 
@@ -20,13 +21,13 @@ def show_images(images=[]):
 
 
 def test_model():
-    for epoch in range(10000):
+    for epoch in range(500):
         model = DiffusionModel(lr=0.01)
         model = train_sample(model, data, total_timesteps, device, verbose=True)
         print(f"Epoch {epoch}")
 
     process_images = []
-    random_img = torch.randn(1, 3, 64, 64).clamp(-1, 1).to(device)
+    random_img, _ = add_noise(data.unsqueeze(0), 99, total_timesteps, device)  #torch.randn(1, 3, 64, 64).clamp(-1, 1).to(device)
     for timestep in range(100)[::-1]:
         random_img = denoise_timestep(model, random_img, timestep, total_timesteps, device).clamp(-1, 1)
         if timestep in [0, 2, 5, 7, 9]:
