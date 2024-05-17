@@ -101,12 +101,13 @@ class UNet(nn.Module):
         self.down1 = (Down(64, 128))
         self.down2 = (Down(128, 256))
         self.down3 = (Down(256, 512))
-        factor = 1
-        self.down4 = (Down(512, 1024 // factor))
-        self.up1 = (Up(1024, 512 // factor))
-        self.up2 = (Up(512, 256 // factor))
-        self.up3 = (Up(256, 128 // factor))
-        self.up4 = (Up(128, 64))
+        self.down4 = (Down(512, 1024))
+        self.down5 = (Down(1024, 2048))
+        self.up1 = (Up(2048, 1024))
+        self.up2 = (Up(1024, 512))
+        self.up3 = (Up(512, 256))
+        self.up4 = (Up(256, 128))
+        self.up5 = (Up(128, 64))
         self.outc = (OutConv(64, n_classes))
 
     def forward(self, x, t):
@@ -115,10 +116,12 @@ class UNet(nn.Module):
         x3 = self.down2(x2, t)
         x4 = self.down3(x3, t)
         x5 = self.down4(x4, t)
-        x = self.up1(x5, x4, t)
-        x = self.up2(x, x3, t)
-        x = self.up3(x, x2, t)
-        x = self.up4(x, x1, t)
+        x6 = self.down5(x5, t)
+        x = self.up1(x6, x5, t)
+        x = self.up2(x, x4, t)
+        x = self.up3(x, x3, t)
+        x = self.up4(x, x2, t)
+        x = self.up5(x, x1, t)
         logits = self.outc(x)
         return logits
 

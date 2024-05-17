@@ -10,9 +10,13 @@ to_pil = transforms.ToPILImage()
 model = DiffusionModel(lr=0.004)
 dataset = torch.load('datasets/cats.pth')
 data = dataset[1][0].unsqueeze(0).to(device)
-timestep = torch.tensor(30).to(device)
+timestep = torch.tensor(100).to(device)
 total_timesteps = torch.tensor(100).to(device)
 model.to(device)
+
+
+def rand_img():
+    return torch.randn(1, 3, 64, 64).clamp(-1, 1)
 
 
 def show_3_images(original, noisy, denoised):
@@ -27,13 +31,14 @@ def show_3_images(original, noisy, denoised):
 
 
 def test_model(verbose=True):
-    for epoch in range(20000):
+    for epoch in range(10000):
         noisy_tensor, noise = add_noise(data, timestep, total_timesteps, device)
         loss = model.training_step(noisy_tensor, noise, timestep)
         if verbose:
             print(f"Epoch {epoch}: Loss: {loss}")
     
-    noisy_tensor, noise = add_noise(data, timestep, total_timesteps, device)
+   # noisy_tensor, noise = add_noise(data, timestep, total_timesteps, device)
+    noisy_tensor = rand_img().to(device)
     pred_noise = model(noisy_tensor, timestep)
     denoised = noisy_tensor - pred_noise
     denoised = torch.clamp(denoised, -1, 1)
