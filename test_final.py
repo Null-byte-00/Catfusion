@@ -14,7 +14,7 @@ to_pil = transforms.ToPILImage()
 
 
 def show_images(images=[]):
-    fig, axs = plt.subplots(1, len(images))
+    fig, axs = plt.subplots(1, len(images), figsize=(11, 3))
     for i, image in enumerate(images):
         axs[i].imshow(to_pil(image))
     plt.show()
@@ -37,5 +37,4 @@ def test_model(verbose=True):
     show_images(process_images)
 
 if __name__ == '__main__':
-    model = DiffusionModel(lr=0.01).to(device)
     test_model()
