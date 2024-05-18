@@ -20,11 +20,12 @@ def show_images(images=[]):
     plt.show()
 
 
-def test_model():
+def test_model(verbose=True):
     model = DiffusionModel(lr=0.01).to(device)
     for epoch in range(200):
-        model = train_sample(model, data, total_timesteps, device, verbose=True)
-        print(f"Epoch {epoch}")
+        model = train_sample(model, data, total_timesteps, device, verbose=verbose)
+        if verbose:
+            print(f"Epoch {epoch}")
 
     process_images = []
     random_img, _ = add_noise(data.unsqueeze(0), 19 , total_timesteps, device)  #torch.randn(1, 3, 64, 64).clamp(-1, 1).to(device)
@@ -33,7 +34,6 @@ def test_model():
         random_img = denoise_timestep(model, random_img, timestep, total_timesteps, device, beta=0.15).clamp(-1, 1)
         if timestep in [0, 4, 10, 14, 18, 20]:
             process_images.append(random_img[0].cpu())
-        #print(f"Timestep {timestep}")
     show_images(process_images)
 
 if __name__ == '__main__':
