@@ -21,10 +21,10 @@ def train_sample(model, data, total_timesteps, device="cpu", verbose=False):
     return model
 
 
-def denoise_timestep(model, data, timestep, total_timesteps, device="cpu"):
+def denoise_timestep(model, data, timestep, total_timesteps, device="cpu", beta=1.0):
     t = torch.tensor(timestep).to(device)
     total_timesteps = torch.tensor(total_timesteps).to(device)
     
     noise = model(data, t)
-    denoised = data - noise
+    denoised = data - (noise * beta)
     return torch.clamp(denoised, -1, 1).clone().detach()
