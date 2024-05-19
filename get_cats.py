@@ -2,7 +2,7 @@ import requests
 import os
 
 # Make sure to replace 'your_api_key' with your actual API key
-api_key = 'live_E1KOtJqjE7nl7bkuDgVAowQTRmxx2PQIKphzbo4F1nfIkJeq5v0jbCN6wNPVgHkt'
+api_key = os.environ['CAT_API_KEY']
 url = 'https://api.thecatapi.com/v1/images/search'
 
 headers = {
