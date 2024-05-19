@@ -2,6 +2,7 @@ from noise_scheduler import add_noise
 from model import DiffusionModel
 import matplotlib.pyplot as plt
 from torchvision import transforms
+from PIL import Image
 import torch
 
 
@@ -41,7 +42,7 @@ def train_model(model, dataset, total_timesteps,
             if verbose:
                 print(f"Epoch {epoch} - Sample {i}")
             if i%100 == 0:
-                model.save(f"models/model_{epoch}_{i}.pth")
+                model.save(f"models/model_{epoch + 2}_{i}.pth")
 
 
 def show_images(images=[]):
@@ -52,10 +53,17 @@ def show_images(images=[]):
     plt.show()
 
 
+def make_too_noisy(data):
+    return data * 0.8 + torch.randn_like(data) 
+
 def test_model(model, dataset, total_timesteps, device="cuda", beta=0.025):
     process_images = []
-    data = dataset[5][0].to(device)
-    random_img, _ = add_noise(data.unsqueeze(0), 99, total_timesteps, device)
+    #data = dataset[0][0].to(device)
+    data = Image.open('random_image.jpg')
+    data = transforms.Resize((64, 64))(data)
+    data = transforms.ToTensor()(data).to(device)
+    #random_img, _ = add_noise(data.unsqueeze(0), 99, total_timesteps, device)
+    random_img = make_too_noisy(data.unsqueeze(0))
     process_images.append(random_img[0].cpu())
     for timestep in range(total_timesteps)[::-1]:
         random_img = denoise_timestep(model, random_img, timestep, total_timesteps, device, beta=beta).clamp(-1, 1)
@@ -68,6 +76,8 @@ if __name__ == '__main__':
     dataset = torch.load('datasets/cats.pth')
     #dataset = torch.utils.data.Subset(dataset, range(10))
     model = DiffusionModel(lr=0.01)
+    model.load("models/model_0_600.pth")
+    model.to("cuda")
     total_timesteps = 100
     train_model(model, dataset, total_timesteps, epochs=1, device="cuda")
     test_model(model, torch.load('datasets/cats.pth'), total_timesteps)
